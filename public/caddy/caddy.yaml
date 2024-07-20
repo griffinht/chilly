@@ -21,8 +21,8 @@ spec:
       image: docker.io/caddy
       env:
         - name: DOMAIN
-          #value: chilly.griffinht.com
-          value: localhost
+          value: chilly.griffinht.com
+            #value: localhost
       ports:
         - containerPort: 80
           name: http
