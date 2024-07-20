@@ -1,0 +1,37 @@
+{
+    log debug
+    #auto_https off
+}
+
+(all) {
+    #tls /certificates/live/cool.griffinht.com/fullchain.pem /certificates/live/cool.griffinht.com/privkey.pem
+    handle_errors {
+        rewrite * /{err.status_code}
+	reverse_proxy https://http.cat {
+            header_up Host {upstream_hostport}
+            replace_status {err.status_code}
+	}
+    }
+}
+
+https://{$DOMAIN} {
+    import all
+    #log info
+    respond 404
+}
+
+https://searxng.{$DOMAIN} {
+    import all
+    reverse_proxy {
+        to searxng
+        health_uri /healthz
+    }
+}
+
+https://redlib.{$DOMAIN} {
+    import all
+    reverse_proxy {
+        to redlib
+        health_uri /settings
+    }
+}

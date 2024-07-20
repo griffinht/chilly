@@ -1,0 +1,12 @@
+  invidious:
+    image: quay.io/invidious/invidious:latest
+    restart: unless-stopped
+    networks:
+      - default
+      - internal
+      - traefik_default
+        # port 3000
+    environment:
+      INVIDIOUS_CONFIG: |
+        database_url: postgres://postgres:@postgres
+        hmac_key: b7377837040574d07a254cb89b6f7e014b14386c

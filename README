@@ -1,0 +1,4 @@
+tcp services:
+iPerf
+
+todo replace with kube output from loadbalancer resources?

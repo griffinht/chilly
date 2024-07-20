@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: caddy
+spec:
+  resources:
+    requests:
+      storage: 10Mi
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: caddy
+  labels:
+    app.kubernetes.io/name: caddy
+spec:
+  containers:
+    - name: caddy
+      image: docker.io/caddy
+      env:
+        - name: DOMAIN
+          #value: chilly.griffinht.com
+          value: localhost
+      ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+      volumeMounts:
+        # holds certificate state
+      - mountPath: /data
+        name: state
+      - mountPath: /etc/caddy
+        name: config
+  volumes:
+    - name: state
+      persistentVolumeClaim:
+        claimName: caddy
+    - name: config
+      configMap:
+        name: caddy
+        items:
+          - key: Caddyfile
+            path: Caddyfile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: caddy
+spec:
+  selector:
+    app.kubernetes.io/name: caddy
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  - name: https
+    port: 443
+    targetPort: https
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: caddy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: caddy
