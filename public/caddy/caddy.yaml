@@ -60,6 +60,7 @@ spec:
   - name: https
     port: 443
     targetPort: https
+  loadBalancerIP: 34.74.21.105 
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -69,3 +70,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: caddy
+  policyTypes:
+    - Ingress
+  ingress:
+    - from: []

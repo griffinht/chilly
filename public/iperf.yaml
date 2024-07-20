@@ -27,6 +27,7 @@ spec:
   ports:
   - port: 5201
     targetPort: iperf
+  loadBalancerIP: 35.231.59.239
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -36,3 +37,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: iperf
+  policyTypes:
+    - Ingress
+  ingress:
+    - from: []
