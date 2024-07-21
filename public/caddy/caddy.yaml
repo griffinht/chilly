@@ -10,7 +10,7 @@ spec:
     - ReadWriteOnce
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: caddy
   labels:
@@ -30,8 +30,10 @@ spec:
           image: docker.io/caddy
           env:
             - name: DOMAIN
-              value: chilly.griffinht.com
-                #value: localhost
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: domain
           ports:
             - containerPort: 80
               name: http

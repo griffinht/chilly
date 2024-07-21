@@ -6,3 +6,6 @@ credentials:
 # there should really be a better way to do this tho
 test:
 	kubectl exec -it searxng -- sh -c "wget -qO- --timeout=2 redlib > /dev/null"
+
+deploy:
+	ls ../prod.yaml *.yaml */*.yaml | xargs -I {} kubectl apply -f {}

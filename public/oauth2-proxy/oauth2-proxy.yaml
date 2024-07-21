@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth2-proxy
+  labels:
+    app.kubernetes.io/name: oauth2-proxy
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: oauth2-proxy
+    spec:
+      containers:
+      - name: oauth2-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:latest
+        env:
+          - name: OAUTH2_PROXY_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy
+                key: OAUTH2_PROXY_COOKIE_SECRET
+          - name: OAUTH2_PROXY_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy
+                key: OAUTH2_PROXY_CLIENT_SECRET
+        args:
+          - --provider=oidc
+            #- --scope="openid name email"
+          - --client-id=oauth2-proxy
+          - --oidc-issuer-url=https://eiozf5.logto.app/oidc
+          - --redirect-url=http://localhost:8080/oauth2/callback
+          - --email-domain=*
+            # todo set to false?
+          - --insecure-oidc-allow-unverified-email=true
+          #- --allowed-role=<realm role name> // Optional, required realm role
+          #- --allowed-role=<client id>:<client role name> // Optional, required client role
+          #- --allowed-group=</group name> // Optional, requires group client scope
+          # complains when provider has this enabled but we don't use it
+          # todo make sure we are using it when the provider has this!
+          #- --code-challenge-method=S256
+        ports:
+        - containerPort: 4180
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oauth2-proxy
+spec:
+  selector:
+    app.kubernetes.io/name: oauth2-proxy
+  ports:
+  - port: 80
+    targetPort: http
