@@ -35,3 +35,19 @@ https://redlib.{$DOMAIN} {
         health_uri /settings
     }
 }
+
+https://speedtest.{$DOMAIN} {
+    import all
+    reverse_proxy {
+        to speedtest
+        health_uri /
+    }
+}
+
+https://keycloak.{$DOMAIN} {
+    import all
+    reverse_proxy {
+        to keycloak
+        health_uri /realms/master
+    }
+}
