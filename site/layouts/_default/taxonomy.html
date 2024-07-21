@@ -1,0 +1,14 @@
+<!-- layouts/_default/taxonomy.html -->
+  <html>
+  <head>
+      <title>{{ .Title }}</title>
+  </head>
+  <body>
+      <h1>{{ .Title }}</h1>
+      <ul>
+      {{ range .Data.Pages }}
+          <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+      {{ end }}
+      </ul>
+  </body>
+  </html>
