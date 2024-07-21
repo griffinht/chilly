@@ -10,7 +10,7 @@ spec:
     - ReadWriteOnce
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: caddy
   labels:
@@ -20,6 +20,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: caddy
+  strategy:
+    # multiple instances of caddy can't run at the same time
+    type: Recreate
   template:
     metadata:
       labels:
