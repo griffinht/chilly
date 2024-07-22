@@ -48,6 +48,10 @@ spec:
             name: state
           - mountPath: /etc/caddy
             name: config
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 250m
       volumes:
         - name: state
           persistentVolumeClaim:

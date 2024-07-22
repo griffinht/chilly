@@ -51,6 +51,10 @@ spec:
         ports:
         - containerPort: 4180
           name: http
+        resources:
+          requests:
+            memory: 10Mi
+            cpu: 250m
 ---
 apiVersion: v1
 kind: Service
