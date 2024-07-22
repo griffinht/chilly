@@ -92,3 +92,13 @@ https://miniflux.{$DOMAIN} {
         # todo try /ready? https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/
     }
 }
+
+https://httpbin.{$DOMAIN} {
+    import all
+    import auth
+    reverse_proxy {
+        to httpbin
+        health_uri /
+        # todo try /ready? https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/
+    }
+}
