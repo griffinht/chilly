@@ -1,11 +1,12 @@
 {
-    #http_port {$HTTP_PORT}
-    #https_port {$HTTPS_PORT}
+    http_port {$HTTP_PORT}
+    https_port {$HTTPS_PORT}
     log debug
     #auto_https off
 }
 
 (all) {
+    #tls internal
     #tls /certificates/live/cool.griffinht.com/fullchain.pem /certificates/live/cool.griffinht.com/privkey.pem
     handle_errors {
         rewrite * /{err.status_code}
@@ -17,16 +18,19 @@
 }
 
 (auth) {
+
+    log info
     forward_auth oauth2-proxy {
         # todo set x-real-ip
         # todo set x-forwarded-uri
         uri /oauth2/auth
 
-        copy_headers x-auth-request-user x-auth-request-email sadfasdfsaf
+        copy_headers X-Auth-Request-User>X-Forwarded-User X-Auth-Request-Email>X-Forwarded-Email
 
         @unauthorized status 401
         handle_response @unauthorized {
-            redir https://oauth2-proxy.chilly.griffinht.com/oauth2/sign_in?rd={scheme}://{host}{uri}
+            # todo hardcode scheme? don't hardcode scheme?
+            redir https://oauth2-proxy.{$DOMAIN}/oauth2/sign_in?rd={scheme}://{host}{uri}
         }
     }
 }
@@ -63,16 +67,8 @@ https://speedtest.{$DOMAIN} {
 
 # auth
 
-https://keycloak.{$DOMAIN} {
-    import all
-    reverse_proxy {
-        to keycloak
-        health_uri /realms/master
-    }
-}
-
-
 https://oauth2-proxy.{$DOMAIN} {
+    log info
     import all
     reverse_proxy {
         to oauth2-proxy
@@ -89,7 +85,6 @@ https://miniflux.{$DOMAIN} {
     reverse_proxy {
         to miniflux
         health_uri /ping
-        # todo try /ready? https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/
     }
 }
 
@@ -98,7 +93,7 @@ https://httpbin.{$DOMAIN} {
     import auth
     reverse_proxy {
         to httpbin
-        health_uri /
+        health_uri /status/200
         # todo try /ready? https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/
     }
 }

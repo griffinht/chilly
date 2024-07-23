@@ -32,6 +32,10 @@ spec:
         - name: caddy
           image: docker.io/caddy
           env:
+            - name: HTTP_PORT
+              value: '80'
+            - name: HTTPS_PORT
+              value: '443'
             - name: DOMAIN
               valueFrom:
                 configMapKeyRef:

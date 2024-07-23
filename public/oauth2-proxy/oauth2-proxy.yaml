@@ -28,26 +28,36 @@ spec:
                 name: oauth2-proxy
                 key: OAUTH2_PROXY_CLIENT_SECRET
         args:
-          - --provider=oidc
+            #todo /ping /ready
             # 127.0.0.1 by default
           - --http-address=http://0.0.0.0:4180
-            #- --scope="openid name email"
-          - --client-id=oauth2-proxy
-          - --oidc-issuer-url=https://keycloak.chilly.griffinht.com/realms/chilly
+          - --reverse-proxy=true
+          - --skip-provider-button=true
+            #- --cookie-domain=chilly.griffinht.com
+          - --whitelist-domain=.chilly.griffinht.com
+          - --set-xauthrequest=true
+            #--pass-access-token
+            # X-Auth-Request-Access-Token
+            #--pass-authorization-header
+            #todo real-client-ip-header x-real-ip
+            #
+            # oidc config
+            #
+          - --provider=oidc
+            #- --scope="openid email profile"
+            # todo convert to secret and rotate
+            # or at least a configmap idk
+          - --client-id=d1u01xae7h35nj256t8sr
+          - --oidc-issuer-url=https://eiozf5.logto.app/oidc
           - --redirect-url=https://oauth2-proxy.chilly.griffinht.com/oauth2/callback
+            #useful in case i want downstream app to be able to see wazzzzzup
+            #- --pass-access-token=true
           - --email-domain=*
             # todo set to false?
           - --insecure-oidc-allow-unverified-email=true
-          #- --allowed-role=<realm role name> // Optional, required realm role
-          #- --allowed-role=<client id>:<client role name> // Optional, required client role
-          #- --allowed-group=</group name> // Optional, requires group client scope
           # complains when provider has this enabled but we don't use it
-          # todo make sure we are using it when the provider has this!
           - --code-challenge-method=S256
-          - --reverse-proxy=true
-          - --cookie-domain=chilly.griffinht.com
-          - --whitelist-domain=.chilly.griffinht.com
-            # todo add x real ip
+            #--backend-logout-url
         ports:
         - containerPort: 4180
           name: http

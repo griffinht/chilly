@@ -1,0 +1,14 @@
+services:
+  caddy:
+    image: docker.io/caddy
+    environment:
+      - DOMAIN=chilly.griffinht.com
+      - HTTP_PORT=8080
+      - HTTPS_PORT=4443
+        #ports:
+        #- 8080:80
+        #- 4434:443
+    network_mode: host
+    volumes:
+      #- caddy:/data
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
