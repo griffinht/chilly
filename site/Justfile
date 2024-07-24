@@ -1,0 +1,11 @@
+deploy:
+    wrangler pages deploy \
+        --commit-dirty=true \
+        --project-name=chilly \
+        --branch=main public
+
+build:
+    hugo
+
+develop:
+    hugo serve
