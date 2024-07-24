@@ -23,17 +23,19 @@ spec:
                 name: oauth2-proxy
                 key: OAUTH2_PROXY_COOKIE_SECRET
           - name: OAUTH2_PROXY_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: oauth2-proxy
-                key: OAUTH2_PROXY_CLIENT_SECRET
+            value: lol
+                  #- name: OAUTH2_PROXY_CLIENT_SECRET
+                  #valueFrom:
+                  #secretKeyRef:
+                  #name: oauth2-proxy
+                  #key: OAUTH2_PROXY_CLIENT_SECRET
         args:
             #todo /ping /ready
             # 127.0.0.1 by default
           - --http-address=http://0.0.0.0:4180
           - --reverse-proxy=true
           - --skip-provider-button=true
-            #- --cookie-domain=chilly.griffinht.com
+          - --cookie-domain=chilly.griffinht.com
           - --whitelist-domain=.chilly.griffinht.com
           - --set-xauthrequest=true
             #--pass-access-token
@@ -44,12 +46,13 @@ spec:
             # oidc config
             #
           - --provider=oidc
-            #- --scope="openid email profile"
+            #- --scope="openid profile"
             # todo convert to secret and rotate
             # or at least a configmap idk
-          - --client-id=d1u01xae7h35nj256t8sr
-          - --oidc-issuer-url=https://eiozf5.logto.app/oidc
+          - --client-id=277298936371305528@chilly
+          - --oidc-issuer-url=https://chilly-u6qnoj.zitadel.cloud
           - --redirect-url=https://oauth2-proxy.chilly.griffinht.com/oauth2/callback
+            #- --redirect-url=http://localhost:8080/oauth2/callback
             #useful in case i want downstream app to be able to see wazzzzzup
             #- --pass-access-token=true
           - --email-domain=*
@@ -57,7 +60,17 @@ spec:
           - --insecure-oidc-allow-unverified-email=true
           # complains when provider has this enabled but we don't use it
           - --code-challenge-method=S256
-            #--backend-logout-url
+            # how to log out:
+            #
+            # dumb solution (works shockingly well)
+            #https://oauth2-proxy.chilly.griffinht.com/oauth2/sign_out?rd=https://chilly-u6qnoj.zitadel.cloud/oidc/v1/end_session
+            #
+            # smart solution (doesn't work)
+            # https://zitadel.com/docs/guides/integrate/login/oidc/logout#rp-initiated-logout
+            #https://github.com/oauth2-proxy/oauth2-proxy/issues/884
+          #- --backend-logout-url=https://chilly-u6qnoj.zitadel.cloud/oidc/v1/end_session?id_token_hint={id_token}&post_logout_redirect_uri=https://redlib.chilly.griffinht.com
+          # todo https://github.com/nais/wonderwall/issues?q=logout
+          #unrelated todo https://www.ory.sh/docs/oathkeeper
         ports:
         - containerPort: 4180
           name: http
