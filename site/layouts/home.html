@@ -1,6 +1,8 @@
-  <html>
+<!DOCTYPE html>
+<html>
   <head>
       <title>{{ .Site.Title }}</title>
+      <script defer data-domain="chilly.griffinht.com" src="https://plausible.io/js/script.js"></script>
   </head>
   <body>
       <h1>Welcome to My Website</h1>
@@ -8,7 +10,72 @@
       <div>
           <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
           <p>{{ .Summary }}</p>
+          <h1>article</h1>
+          {{ .Content }}
+<style>
+#icons {
+    display: flex
+}
+#icons > div {
+    background-color: lightblue;
+    border: 5px;
+    margin: 1em;
+    border: .5em solid rgba(0,0,0,0);
+    border-radius: 1em;
+    padding: 1em;
+}
+#icons > div:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+    border: .5em solid black;
+}
+#icons > div > img {
+    height: 50pt;
+    width: 50pt;
+}
+</style>
+          <div id="icons">
+              <div>
+                  <details>
+                      <summary>iPerf</summary>
+                      Console based speed test server.
+Try connecting to it with the iPerf client:
+
+```sh
+iperf3 -c iperf.chilly.griffinht.com
+```
+
+```sh
+docker run --rm -it docker.io/griffinhtdocker/iperf iperf3 -c iperf.chilly.griffinht.com
+```
+                  </details>
+                  <code>iperf.chilly.griffinht.com</code>
+              </div>
+              <div>
+                  <img src="redlib.svg">
+                  <details>
+                      <summary>RedLib</summary>
+                      Alternative frontend for Reddit
+                  </details>
+                  <a href="https://redlib.chilly.griffinht.com">[link]</a>
+              </div>
+              <div>
+                  <img src="searxng.svg">
+                  <details>
+                      <summary>SearXNG</summary>
+                      Internet metasearch engine, like Google but for multiple search engines (Brave Search, Qwant, DuckDuckGo, and more)
+                  </details>
+                  <a href="https://searxng.chilly.griffinht.com">[link]</a>
+              </div>
+              <div>
+                  <img src="speedtest.png">
+                  <details>
+                      <summary>Speedtest</summary>
+                      Web based speed test application, like <a href="https://speedtest.net">speedtest.net</a>
+                  </details>
+                  <a href="https://speedtest.chilly.griffinht.com">[link]</a>
+              </div>
+          </div>
       </div>
       {{ end }}
   </body>
-  </html>
+</html>

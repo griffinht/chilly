@@ -1,4 +1,4 @@
-deploy:
+deploy: build
     wrangler pages deploy \
         --commit-dirty=true \
         --project-name=chilly \
@@ -7,5 +7,5 @@ deploy:
 build:
     hugo
 
-develop:
+dev:
     hugo serve
