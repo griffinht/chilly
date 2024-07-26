@@ -11,3 +11,5 @@ deploy:
 	# todo improve concurrency somehow?
 	#https://stackoverflow.com/questions/28357997/running-programs-in-parallel-using-xargs
 	ls ../prod.yaml *.yaml */*.yaml | xargs -P 16 -I {} kubectl apply --warnings-as-errors -f {}
+	# *.jsonnet
+	ls */*.jsonnet | xargs -P 16 -I {} sh -c 'jsonnet {} -V configMap=caddy-v10 | kubectl apply --warnings-as-errors -f -'
