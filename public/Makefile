@@ -8,4 +8,6 @@ test:
 	kubectl exec -it searxng -- sh -c "wget -qO- --timeout=2 redlib > /dev/null"
 
 deploy:
-	ls ../prod.yaml *.yaml */*.yaml | xargs -I {} kubectl apply -f {}
+	# todo improve concurrency somehow?
+	#https://stackoverflow.com/questions/28357997/running-programs-in-parallel-using-xargs
+	ls ../prod.yaml *.yaml */*.yaml | xargs -P 16 -I {} kubectl apply --warnings-as-errors -f {}
