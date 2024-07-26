@@ -82,9 +82,11 @@ https://oauth2-proxy.{$DOMAIN} {
 https://miniflux.{$DOMAIN} {
     import all
     import auth
+    @metrics path /metrics
+    respond @metrics 403
     reverse_proxy {
         to miniflux
-        health_uri /ping
+        health_uri /healthcheck
     }
 }
 

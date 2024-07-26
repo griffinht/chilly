@@ -62,7 +62,7 @@ spec:
             claimName: caddy
         - name: config
           configMap:
-            name: caddy
+            name: caddy-v10
             items:
               - key: Caddyfile
                 path: Caddyfile

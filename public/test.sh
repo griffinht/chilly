@@ -13,3 +13,11 @@ trap cleanup EXIT
 kubectl config set-context "$context"
 
 make deploy
+
+# todo should wait until changes have propogated from deploy - kubectl probably has a way to do that idk
+code="$(curl -s -o /dev/null -w "%{http_code}" https://miniflux.chilly.griffinht.com/metrics)"
+# todo should be 403
+# but i can't test that because of authentication
+if [ "$code" -ne 302 ]; then
+    exit 1
+fi
