@@ -1,0 +1,10 @@
+@font-face {
+  font-family: "Virgil";
+  src:
+    local("Virgil"),
+    url("Virgil.woff2") format("woff2");
+}
+
+body {
+    font-family: "Virgil", sans-serif;
+}

@@ -9,3 +9,7 @@ build:
 
 dev:
     hugo serve
+
+font:
+    # https://virgil.excalidraw.com/
+    wget -P static/ https://virgil.excalidraw.com/Virgil.woff2

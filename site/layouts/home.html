@@ -3,6 +3,7 @@
   <head>
       <title>{{ .Site.Title }}</title>
       <script defer data-domain="chilly.griffinht.com" src="https://plausible.io/js/script.js"></script>
+      <link rel="stylesheet" href="style.css">
   </head>
   <body>
       <h1>Welcome to My Website</h1>
@@ -35,8 +36,25 @@
 </style>
           <div id="icons">
               <div>
+                  <!-- todo https://redlib.chilly.griffinht.com/r/lastfm/comments/htzomy/list_of_spotifylastfm_stats_websites_and_not_just/ -->
+                  <img src="spotify.png">
+                  <p>spotify</p>
+                  <a href="https://open.spotify.com/user/vxtlb20119xae014jtl1azigz">link</a>
+              </div>
+              <div>
+                  <!-- todo find the icon version of this -->
+                  <img src="lastfm.svg">
+                  <p>last.fm</p>
+                  <a href="https://www.last.fm/user/griffin_ht">link</a>
+              </div>
+              <div>
+                  <img src="scatter.png">
+                  <p>scatterfm</p>
+                  <a href="https://scatterfm.markhansen.co.nz/graph.html#/user/griffin_ht">link</a>
+              </div>
+              <div>
                   <details>
-                      <summary>iPerf</summary>
+                      <summary>iperf</summary>
                       Console based speed test server.
 Try connecting to it with the iPerf client:
 
@@ -53,7 +71,7 @@ docker run --rm -it docker.io/griffinhtdocker/iperf iperf3 -c iperf.chilly.griff
               <div>
                   <img src="redlib.svg">
                   <details>
-                      <summary>RedLib</summary>
+                      <summary>redlib</summary>
                       Alternative frontend for Reddit
                   </details>
                   <a href="https://redlib.chilly.griffinht.com">[link]</a>
@@ -61,7 +79,7 @@ docker run --rm -it docker.io/griffinhtdocker/iperf iperf3 -c iperf.chilly.griff
               <div>
                   <img src="searxng.svg">
                   <details>
-                      <summary>SearXNG</summary>
+                      <summary>searxng</summary>
                       Internet metasearch engine, like Google but for multiple search engines (Brave Search, Qwant, DuckDuckGo, and more)
                   </details>
                   <a href="https://searxng.chilly.griffinht.com">[link]</a>
@@ -69,7 +87,7 @@ docker run --rm -it docker.io/griffinhtdocker/iperf iperf3 -c iperf.chilly.griff
               <div>
                   <img src="speedtest.png">
                   <details>
-                      <summary>Speedtest</summary>
+                      <summary>speedtest</summary>
                       Web based speed test application, like <a href="https://speedtest.net">speedtest.net</a>
                   </details>
                   <a href="https://speedtest.chilly.griffinht.com">[link]</a>
