@@ -6,11 +6,13 @@ context=gke_chilly-429823_us-east1_public
 
 old_context="$(kubectl config current-context)"
 cleanup() {
-    kubectl config set-context "$old_context"
+    kubectl config use-context "$old_context"
 }
 trap cleanup EXIT
 
-kubectl config set-context "$context"
+kubectl config use-context "$context"
+
+kubectl config current-context
 
 make deploy
 
