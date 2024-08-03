@@ -1,0 +1,28 @@
+local name = "talos";
+
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": name
+  },
+  "spec": {
+    "selector": {
+      "app.kubernetes.io/name": name
+    },
+    "ports": [
+      {
+        "port": 50000,
+        // why do i need the names!?
+        "name": "bruh",
+        "targetPort": "talos-api"
+      },
+      {
+        "port": 6443,
+        // why do i need the names!?
+        "name": "bruh2",
+        "targetPort": "k8s-api"
+      }
+    ]
+  }
+}

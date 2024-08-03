@@ -1,0 +1,121 @@
+local name = "talos";
+
+local ephemeralVolumes = [
+  {
+    "mountPath": "/run",
+    "name": "run"
+  },
+  {
+    "mountPath": "/system",
+    "name": "system"
+  },
+  {
+    "mountPath": "/tmp",
+    "name": "tmp"
+  },
+];
+
+local persistentVolumes = [
+  {
+    "mountPath": "/system/state",
+    "name": "system-state"
+  },
+  {
+    "mountPath": "/var",
+    "name": "var"
+  },
+  {
+    "mountPath": "/etc/cni",
+    "name": "etc-cni"
+  },
+  {
+    "mountPath": "/etc/kubernetes",
+    "name": "etc-kubernetes"
+  },
+  {
+    "mountPath": "/usr/libexec/kubernetes",
+    "name": "usr-libexec-kubernetes"
+  },
+  {
+    "mountPath": "/opt",
+    "name": "opt"
+  }
+];
+
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": name,
+    "labels": {
+      "app.kubernetes.io/name": name
+    }
+  },
+  "spec": {
+    "selector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": name
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app.kubernetes.io/name": name
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "image": "ghcr.io/siderolabs/talos:v1.7.0",
+            "name": name,
+            "ports": [
+              {
+                "containerPort": 50000,
+                "name": "talos-api"
+              },
+              {
+                "containerPort": 6443,
+                "name": "k8s-api"
+              }
+            ],
+            "securityContext": {
+              "privileged": true,
+              "readOnlyRootFilesystem": true,
+              "seccompProfile": {
+                "type": "Unconfined"
+              }
+            },
+            "env": [
+                {
+                    "name": "PLATFORM",
+                    "value": "container"
+                }
+            ],
+            "resources": {
+              "requests": {
+                "memory": "32Mi",
+                "cpu": "10m"
+              }
+            },
+            "volumeMounts": ephemeralVolumes + persistentVolumes
+          }
+        ],
+        createEphemeralVolume(name):: {
+          name: name.name,
+          emptyDir: {},
+        },
+        createVolume(name):: {
+          name: name.name,
+          persistentVolumeClaim: {
+            claimName: 'talos-' + name.name,
+          },
+        },
+        "volumes": [
+          self.createEphemeralVolume(name) for name in ephemeralVolumes
+        ] + [
+          self.createVolume(name) for name in persistentVolumes
+        ],
+      }
+    }
+  }
+}

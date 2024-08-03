@@ -1,0 +1,5 @@
+default file:
+    jsonnet {{file}} | kubectl apply -f -
+
+all:
+    ls *.json | xargs -I {} jsonnet {} | kubectl apply -f -
