@@ -30,6 +30,8 @@ local netpol = {
   }
 };
 
+local caddy = import "caddy/caddy.json";
+
 //https://devops.stackexchange.com/questions/18440/what-is-a-single-kubectl-list-object-as-mentioned-in-jsonnet-documentation
 {
   apiVersion: "v1",
@@ -48,6 +50,7 @@ local netpol = {
     prod,
     apps.iperf_service,
     Deployment(apps.iperf_app),
-    apps.iperf_netpol
+    apps.iperf_netpol,
+    caddy("caddy-v16"),
   ]
 }

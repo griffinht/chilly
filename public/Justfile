@@ -12,11 +12,12 @@ credentials:
 test:
     kubectl exec -it searxng -- sh -c "wget -qO- --timeout=2 redlib > /dev/null"
 
+# #!/usr/bin/env bash
+#set -o pipefail
+#ls caddy/*.json | xargs -P 16 -I {} sh -c 'jsonnet {} -V configMap=caddy-v10 | kubectl apply --warnings-as-errors -f -'
+
 deploy:
-    #!/usr/bin/env bash
-    set -o pipefail
     # todo improve concurrency somehow?
     #https://stackoverflow.com/questions/28357997/running-programs-in-parallel-using-xargs
 
-    ls caddy/*.json | xargs -P 16 -I {} sh -c 'jsonnet {} -V configMap=caddy-v10 | kubectl apply --warnings-as-errors -f -'
     jsonnet kubernetes.json | kubectl apply --warnings-as-errors -f -

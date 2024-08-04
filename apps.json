@@ -36,10 +36,16 @@ local apps = [
     name: "ip-server",
     ports: [
       {
-        containerPort: 80,
+        containerPort: 8000,
         name: "http"
       }
-    ]
+    ],
+    readinessProbe: {
+      httpGet: {
+        path: "/",
+        port: "http"
+      }
+    }
   },
   {
     image: "quay.io/redlib/redlib:latest",

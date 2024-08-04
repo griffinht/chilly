@@ -5,6 +5,11 @@
     #auto_https off
 }
 
+# healthcheck
+:9999 {
+    respond / 200
+}
+
 (all) {
     #tls internal
     #tls /certificates/live/cool.griffinht.com/fullchain.pem /certificates/live/cool.griffinht.com/privkey.pem
@@ -62,6 +67,13 @@ https://speedtest.{$DOMAIN} {
     reverse_proxy {
         to speedtest
         health_uri /
+    }
+}
+
+https://ip-server.{$DOMAIN} {
+    import all
+    reverse_proxy {
+        to ip-server
     }
 }
 

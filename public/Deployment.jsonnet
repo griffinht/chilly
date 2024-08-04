@@ -26,6 +26,8 @@ local Deployment(common) = {
             name: common.name,
             ports: common.ports,
             env: if 'env' in common then common.env else null,
+            livenessProbe: if 'livenessProbe' in common then common.livenessProbe else null,
+            readinessProbe: if 'readinessProbe' in common then common.readinessProbe else null,
             command: if 'command' in common then common.command else null,
             resources: if 'resources' in common then common.resources else {
               requests: {
