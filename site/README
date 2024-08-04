@@ -1,2 +1,6 @@
+todo multi backend!
+https://cloud.google.com/storage/docs/hosting-static-website
+
+
 nix shell nixpkgs#wrangler
 
