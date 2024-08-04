@@ -14,7 +14,10 @@ kubectl config use-context "$context"
 
 kubectl config current-context
 
-make deploy
+just deploy
+
+cd jsonnet
+just deploy
 
 # todo should wait until changes have propogated from deploy - kubectl probably has a way to do that idk
 code="$(curl -s -o /dev/null -w "%{http_code}" https://miniflux.chilly.griffinht.com/metrics)"

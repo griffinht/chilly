@@ -1,0 +1,32 @@
+local NetworkPolicy(common) = {
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": common.name,
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": common.name,
+      }
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app.kubernetes.io/name": "caddy"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+};
+
+NetworkPolicy

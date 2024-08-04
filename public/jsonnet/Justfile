@@ -1,0 +1,6 @@
+default testst:
+    #jsonnet common.json -y | kubectl diff -f -
+    jsonnet common.json | kubectl diff -f -
+
+deploy:
+    jsonnet common.json | kubectl apply -f -
