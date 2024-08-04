@@ -1,0 +1,53 @@
+local apps = import "../apps.json";
+
+local NetworkPolicy = import "NetworkPolicy.json";
+local Service = import "Service.json";
+local Deployment = import "Deployment.jsonnet";
+
+local prod = {
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "config"
+  },
+  "data": {
+    "domain": "chilly.griffinht.com"
+  }
+};
+
+local netpol = {
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "default-deny",
+    "namespace": "default"
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": [
+      "Ingress"
+    ]
+  }
+};
+
+//https://devops.stackexchange.com/questions/18440/what-is-a-single-kubectl-list-object-as-mentioned-in-jsonnet-documentation
+{
+  apiVersion: "v1",
+  kind: "List",
+  items: [
+    NetworkPolicy(app)
+    for app in apps.apps
+  ] + [
+    Service(app)
+    for app in apps.apps
+  ] + [
+    Deployment(app)
+    for app in apps.apps
+  ] + [
+    netpol,
+    prod,
+    apps.iperf_service,
+    Deployment(apps.iperf_app),
+    apps.iperf_netpol
+  ]
+}
