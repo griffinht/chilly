@@ -23,7 +23,6 @@
 }
 
 (auth) {
-
     log info
     forward_auth oauth2-proxy {
         # todo set x-real-ip
@@ -98,7 +97,6 @@ https://miniflux.{$DOMAIN} {
     respond @metrics 403
     reverse_proxy {
         to miniflux
-        health_uri /healthcheck
     }
 }
 

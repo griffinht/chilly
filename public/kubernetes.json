@@ -51,6 +51,6 @@ local caddy = import "caddy/caddy.json";
     apps.iperf_service,
     Deployment(apps.iperf_app),
     apps.iperf_netpol,
-    caddy("caddy-v16"),
+    caddy("caddy-v18"),
   ]
 }
