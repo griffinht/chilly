@@ -1,5 +1,7 @@
 [
   import "Deployment.json",
   import "NetworkPolicy.json",
-  import "Service.json"
+  import "Service.json",
+  import "PersistentVolume.json",
+  import "PersistentVolumeClaim.json",
 ]

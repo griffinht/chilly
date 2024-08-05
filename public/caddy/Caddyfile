@@ -2,13 +2,10 @@
     http_port {$HTTP_PORT}
     https_port {$HTTPS_PORT}
     log debug
+    #debug
     #auto_https off
 }
 
-# healthcheck
-:9999 {
-    respond / 200
-}
 
 (all) {
     #tls internal
@@ -20,6 +17,7 @@
             replace_status {err.status_code}
 	}
     }
+    log info
 }
 
 (auth) {
@@ -39,17 +37,21 @@
     }
 }
 
-https://{$DOMAIN} {
-    import all
-    #log info
-    respond 404
+# healthcheck
+:9999 {
+    respond / 200
 }
+
+https://health.{$DOMAIN} {
+    respond / 200
+}
+
 
 https://searxng.{$DOMAIN} {
     import all
     reverse_proxy {
         to searxng
-        health_uri /healthz
+        #health_uri /healthz
     }
 }
 
@@ -57,7 +59,7 @@ https://redlib.{$DOMAIN} {
     import all
     reverse_proxy {
         to redlib
-        health_uri /settings
+        #health_uri /settings
     }
 }
 
@@ -65,7 +67,7 @@ https://speedtest.{$DOMAIN} {
     import all
     reverse_proxy {
         to speedtest
-        health_uri /
+        #health_uri /
     }
 }
 
@@ -83,7 +85,7 @@ https://oauth2-proxy.{$DOMAIN} {
     import all
     reverse_proxy {
         to oauth2-proxy
-        health_uri /ping
+        #health_uri /ping
         # todo try /ready? https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/
     }
 }
@@ -105,7 +107,7 @@ https://httpbin.{$DOMAIN} {
     import auth
     reverse_proxy {
         to httpbin
-        health_uri /status/200
+        #health_uri /status/200
         # todo try /ready? https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/
     }
 }

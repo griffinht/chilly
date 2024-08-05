@@ -1,0 +1,10 @@
+{
+  name: "caddy",
+  storageClassName: "standard-rwo",
+  capacity: {
+    "storage": "1Gi"
+  },
+  accessModes: [
+    "ReadWriteOnce"
+  ]
+}

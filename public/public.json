@@ -5,7 +5,7 @@ local a = {
   items: [
     import "NetworkPolicy.json",
     //nope! this one is cluster scoped!
-    //import "ConfigMap.json",
+    import "ConfigMap.json",
     //import "Namespace.json",
   ] + (import "iperf/iperf.json")
   + (import "miniflux/miniflux.json")
@@ -20,3 +20,4 @@ local b = {
 };
 
 a
+#b

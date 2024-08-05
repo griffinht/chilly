@@ -79,4 +79,4 @@ local caddy(configMap) = k.Deployment("caddy", {
         ],
 });
 
-caddy("caddy-v18")
+caddy("caddy-v26")

@@ -1,0 +1,17 @@
+local volume = import "volume.json";
+
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolumeClaim",
+  "metadata": {
+    "name": volume.name,
+  },
+  "spec": {
+    "storageClassName": volume.storageClassName,
+    "volumeName": volume.name,
+    "accessModes": volume.accessModes,
+    "resources": {
+      "requests": volume.capacity
+    }
+  }
+}

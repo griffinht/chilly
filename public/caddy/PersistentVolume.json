@@ -1,0 +1,19 @@
+local volume = import "volume.json";
+
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolume",
+  "metadata": {
+    "name": volume.name
+  },
+  "spec": {
+    "storageClassName": volume.storageClassName,
+    "capacity": volume.capacity,
+    "accessModes": volume.accessModes,
+    "persistentVolumeReclaimPolicy": "Retain",
+    "csi": {
+      "driver": "pd.csi.storage.gke.io",
+      "volumeHandle": "projects/chilly-429823/zones/us-east1-b/disks/pvc-a40f700c-52d7-4f17-8da0-224d04e3ca1a"
+    }
+  }
+}
