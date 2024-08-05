@@ -1,0 +1,5 @@
+[
+  import "Deployment.json",
+  import "NetworkPolicy.json",
+  import "Service.json"
+]

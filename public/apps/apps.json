@@ -1,8 +1,4 @@
-local miniflux = import "miniflux.json";
-
-local resources = [
-  miniflux
-];
+local k = import "../Kubernetes.json";
 
 local apps = [
     {
@@ -69,63 +65,63 @@ local apps = [
   }
 ];
 
-{
-  resources: resources,
-  apps: apps,
-  iperf_netpol: {
-    "apiVersion": "networking.k8s.io/v1",
-    "kind": "NetworkPolicy",
-    "metadata": {
-      "name": "iperf"
-    },
-    "spec": {
-      "podSelector": {
-        "matchLabels": {
-          "app.kubernetes.io/name": "iperf"
-        }
-      },
-      "policyTypes": [
-        "Ingress"
-      ],
-      "ingress": [
-        {
-          "from": []
-        }
-      ]
-    }
+local Service(name) = {
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": name,
   },
-  iperf_service: {
-    "apiVersion": "v1",
-    "kind": "Service",
-    "metadata": {
-      "name": "iperf"
+  "spec": {
+    "selector": {
+      "app.kubernetes.io/name": name,
     },
-    "spec": {
-      "selector": {
-        "app.kubernetes.io/name": "iperf"
-      },
-      "type": "LoadBalancer",
-      "ports": [
-        {
-          "port": 5201,
-          "targetPort": "iperf"
-        }
-      ],
-      "loadBalancerIP": "35.231.59.239"
-    }
-  },
-  iperf_app: {
-    "name": "iperf",
-    "image": "docker.io/griffinhtdocker/iperf",
     "ports": [
       {
-        "containerPort": 5201,
-        "name": "iperf"
+        "port": 80,
+        "targetPort": "http"
       }
-    ],
-    "command": [
-      "iperf3",
-      "--server"
     ]
   }
-}
+};
+
+local NetworkPolicy(name) = {
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": name,
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app.kubernetes.io/name": name,
+      }
+    },
+    "policyTypes": [
+      "Ingress"
+    ],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app.kubernetes.io/name": "caddy"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+};
+
+[
+  k.Deployment(app.name, { containers: [ k.Container(app) ] })
+  for app in apps
+] + [
+  NetworkPolicy(app.name)
+  for app in apps
+] + [
+  Service(app.name)
+  for app in apps
+]

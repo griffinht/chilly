@@ -1,8 +1,3 @@
-# file is unused
-default file:
-    clear
-    jsonnet kubernetes.json | kubectl diff -f -
-
 credentials:
     gcloud container clusters get-credentials --location=us-east1 public
 
@@ -20,4 +15,4 @@ deploy:
     # todo improve concurrency somehow?
     #https://stackoverflow.com/questions/28357997/running-programs-in-parallel-using-xargs
 
-    jsonnet kubernetes.json | kubectl apply --warnings-as-errors -f -
+    jsonnet public.json | kubectl apply --warnings-as-errors -f -

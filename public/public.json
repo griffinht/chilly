@@ -1,0 +1,11 @@
+//https://devops.stackexchange.com/questions/18440/what-is-a-single-kubectl-list-object-as-mentioned-in-jsonnet-documentation
+{
+  apiVersion: "v1",
+  kind: "List",
+  items: [
+    import "NetworkPolicy.json",
+    import "ConfigMap.json",
+    (import "caddy/caddy.json")("caddy-v18"),
+  ] + (import "iperf/iperf.json")
+  + (import "apps/apps.json"),
+}
