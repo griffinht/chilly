@@ -19,19 +19,80 @@ local Deployment(name, spec) = {
           "app.kubernetes.io/name": name,
         }
       },
-      "spec": spec
+      "spec": spec + {
+        nodeSelector: {
+          "cloud.google.com/gke-spot": "true",
+          //"cloud.google.com/compute-class": "Performance",
+          //"cloud.google.com/machine-family": "c3"
+        },
+        //terminationGracePeriodSeconds: 25
+      }
     }
   }
 };
+
 
 {
   Deployment: Deployment,
   Container: (function(container) container + {
     resources: {
       requests: {
-        memory: "512Mi",
-        cpu: "250m"
-      }
+        memory: "10Mi",
+        cpu: "10m",
+      },
+      /*
+      limits: {
+        memory: "20Mi",
+        cpu: "20m",
+      }*/
     }
-  })
+  }),
+  Service: (function(name) {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {
+      "name": name,
+    },
+    "spec": {
+      "selector": {
+        "app.kubernetes.io/name": name,
+      },
+      "ports": [
+        {
+          "port": 80,
+          "targetPort": "http"
+        }
+      ]
+    }
+  }),
+  NetworkPolicy: (function(name) {
+    "apiVersion": "networking.k8s.io/v1",
+    "kind": "NetworkPolicy",
+    "metadata": {
+      "name": name,
+    },
+    "spec": {
+      "podSelector": {
+        "matchLabels": {
+          "app.kubernetes.io/name": name,
+        }
+      },
+      "policyTypes": [
+        "Ingress"
+      ],
+      "ingress": [
+        {
+          "from": [
+            {
+              "podSelector": {
+                "matchLabels": {
+                  "app.kubernetes.io/name": "caddy"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }),
 }

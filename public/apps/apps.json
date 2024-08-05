@@ -65,63 +65,13 @@ local apps = [
   }
 ];
 
-local Service(name) = {
-  "apiVersion": "v1",
-  "kind": "Service",
-  "metadata": {
-    "name": name,
-  },
-  "spec": {
-    "selector": {
-      "app.kubernetes.io/name": name,
-    },
-    "ports": [
-      {
-        "port": 80,
-        "targetPort": "http"
-      }
-    ]
-  }
-};
-
-local NetworkPolicy(name) = {
-  "apiVersion": "networking.k8s.io/v1",
-  "kind": "NetworkPolicy",
-  "metadata": {
-    "name": name,
-  },
-  "spec": {
-    "podSelector": {
-      "matchLabels": {
-        "app.kubernetes.io/name": name,
-      }
-    },
-    "policyTypes": [
-      "Ingress"
-    ],
-    "ingress": [
-      {
-        "from": [
-          {
-            "podSelector": {
-              "matchLabels": {
-                "app.kubernetes.io/name": "caddy"
-              }
-            }
-          }
-        ]
-      }
-    ]
-  }
-};
-
 [
   k.Deployment(app.name, { containers: [ k.Container(app) ] })
   for app in apps
 ] + [
-  NetworkPolicy(app.name)
+  k.NetworkPolicy(app.name)
   for app in apps
 ] + [
-  Service(app.name)
+  k.Service(app.name)
   for app in apps
 ]

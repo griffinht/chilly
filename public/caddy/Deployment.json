@@ -1,0 +1,82 @@
+local k = import "../Kubernetes.json";
+
+local caddy(configMap) = k.Deployment("caddy", {
+        containers: [
+          k.Container({
+            name: 'caddy',
+            image: 'docker.io/caddy',
+            env: [
+              {
+                name: 'HTTP_PORT',
+                value: '80',
+              },
+              {
+                name: 'HTTPS_PORT',
+                value: '443',
+              },
+              {
+                name: 'DOMAIN',
+                valueFrom: {
+                  configMapKeyRef: {
+                    name: 'config',
+                    key: 'domain',
+                  },
+                },
+              },
+            ],
+            ports: [
+              {
+                containerPort: 9999,
+                name: 'healthcheck',
+              },
+              {
+                containerPort: 80,
+                name: 'http',
+              },
+              {
+                containerPort: 443,
+                name: 'https',
+              },
+            ],
+            readinessProbe: {
+              httpGet: {
+                path: "/",
+                port: "healthcheck"
+              }
+            },
+            volumeMounts: [
+              {
+                // holds certificate state
+                mountPath: '/data',
+                name: 'state',
+              },
+              {
+                mountPath: '/etc/caddy',
+                name: 'config',
+              },
+            ],
+          })
+        ],
+        volumes: [
+          {
+            name: 'state',
+            persistentVolumeClaim: {
+              claimName: 'caddy',
+            },
+          },
+          {
+            name: 'config',
+            configMap: {
+              name: configMap,
+              items: [
+                {
+                  key: 'Caddyfile',
+                  path: 'Caddyfile',
+                },
+              ],
+            },
+          },
+        ],
+});
+
+caddy("caddy-v18")

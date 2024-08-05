@@ -1,11 +1,22 @@
 //https://devops.stackexchange.com/questions/18440/what-is-a-single-kubectl-list-object-as-mentioned-in-jsonnet-documentation
-{
+local a = {
   apiVersion: "v1",
   kind: "List",
   items: [
     import "NetworkPolicy.json",
-    import "ConfigMap.json",
-    (import "caddy/caddy.json")("caddy-v18"),
+    //nope! this one is cluster scoped!
+    //import "ConfigMap.json",
+    //import "Namespace.json",
   ] + (import "iperf/iperf.json")
+  + (import "miniflux/miniflux.json")
+  + (import "caddy/caddy.json")
   + (import "apps/apps.json"),
-}
+};
+
+local b = {
+  apiVersion: "v1",
+  kind: "List",
+  items: [import "NetworkPolicy.json"]
+};
+
+a

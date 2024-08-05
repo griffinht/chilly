@@ -1,0 +1,20 @@
+{
+  "apiVersion": "v1",
+  "kind": "Service",
+  "metadata": {
+    "name": "caddy"
+  },
+  "spec": {
+    "selector": {
+      "app.kubernetes.io/name": "caddy"
+    },
+    "type": "LoadBalancer",
+    "ports": [
+      {
+        "port": 80,
+        "targetPort": "http"
+      }
+    ],
+    "loadBalancerIP": "34.74.21.105"
+  }
+}
