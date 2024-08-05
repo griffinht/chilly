@@ -1,4 +1,4 @@
-local Deployment(name, containers) = {
+local Deployment(name, spec) = {
   "apiVersion": "apps/v1",
   "kind": "Deployment",
   "metadata": {
@@ -19,9 +19,7 @@ local Deployment(name, containers) = {
           "app.kubernetes.io/name": name,
         }
       },
-      "spec": {
-        containers: containers
-      }
+      "spec": spec
     }
   }
 };

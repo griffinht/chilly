@@ -1,0 +1,79 @@
+local k = import "Kubernetes.json";
+
+k.Deployment("miniflux", {
+  volumes: [
+    {
+      name: "postgres",
+      secret: {
+        secretName: "postgres"
+      }
+    }
+  ],
+  containers: [
+    k.Container({
+      name: "cloud-sql-proxy",
+      image: "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.4",
+      args: [
+        "chilly-429823:us-east1:chilly",
+        "--credentials-file=/secrets/service_account.json"
+      ],
+      securityContext: {
+        runAsNonRoot: true
+      },
+      volumeMounts: [
+        {
+          name: "postgres",
+          mountPath: "/secrets/",
+          readOnly: true
+        }
+      ]
+    }),
+    k.Container({
+      name: "miniflux",
+      image: "docker.io/miniflux/miniflux:latest",
+      ports: [
+        {
+          containerPort: 8080,
+          name: "http"
+        }
+      ],
+      env: [
+        {
+          name: "DATABASE_URL",
+          valueFrom: {
+            secretKeyRef: {
+              name: "miniflux",
+              key: "DATABASE_URL"
+            }
+          }
+        },
+        {
+          name: "AUTH_PROXY_HEADER",
+          value: "X-Forwarded-User"
+        },
+        {
+          name: "AUTH_PROXY_USER_CREATION",
+          value: "true"
+        },
+        {
+          name: "METRICS_COLLECTOR",
+          value: "1"
+        },
+        {
+          name: "METRICS_ALLOWED_NETWORKS",
+          value: "0.0.0.0/0,::/0"
+        },
+        {
+          name: "PORT",
+          value: "8080"
+        }
+      ],
+      readinessProbe: {
+        httpGet: {
+          path: "/healthcheck",
+          port: "http"
+        }
+      }
+    }),
+  ]
+})
