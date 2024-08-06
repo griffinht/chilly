@@ -11,9 +11,4 @@ test:
 #set -o pipefail
 #ls caddy/*.json | xargs -P 16 -I {} sh -c 'jsonnet {} -V configMap=caddy-v10 | kubectl apply --warnings-as-errors -f -'
 
-deploy:
-    # todo improve concurrency somehow?
-    #https://stackoverflow.com/questions/28357997/running-programs-in-parallel-using-xargs
-
-    jsonnet public.json | KUBECTL_APPLYSET=true kubectl apply --warnings-as-errors -f - --prune --applyset=test --namespace=default
-    #jsonnet public.json | kubectl delete --warnings-as-errors -f - --namespace=default
+todo refactor standalone script so i can run from lf

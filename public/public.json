@@ -10,7 +10,8 @@ local a = {
   ] + (import "iperf/iperf.json")
   + (import "miniflux/miniflux.json")
   + (import "caddy/caddy.json")
-  + (import "apps/apps.json"),
+  + (import "apps/apps.json")
+  + (import "secrets/secrets.json"),
 };
 
 local b = {

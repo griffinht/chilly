@@ -95,4 +95,15 @@ local Deployment(name, spec) = {
       ]
     }
   }),
+  Secret: (function(name, data) {
+    kind: "Secret",
+    apiVersion: "v1",
+    metadata: {
+        name: name,
+        //"creationTimestamp": null
+    },
+    // make sure this is b64 encoded!
+    data: { [key]: std.base64(data[key]) for key in std.objectFields(data) },
+    immutable: true
+  }),
 }

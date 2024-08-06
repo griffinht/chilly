@@ -3,9 +3,9 @@ local k = import "../Kubernetes.json";
 k.Deployment("miniflux", {
   volumes: [
     {
-      name: "postgres",
+      name: "cloud-sql-proxy",
       secret: {
-        secretName: "postgres"
+        secretName: "cloud-sql-proxy"
       }
     }
   ],
@@ -22,7 +22,7 @@ k.Deployment("miniflux", {
       },
       volumeMounts: [
         {
-          name: "postgres",
+          name: "cloud-sql-proxy",
           mountPath: "/secrets/",
           readOnly: true
         }
@@ -42,7 +42,7 @@ k.Deployment("miniflux", {
           name: "DATABASE_URL",
           valueFrom: {
             secretKeyRef: {
-              name: "miniflux",
+              name: "miniflux2",
               key: "DATABASE_URL"
             }
           }
