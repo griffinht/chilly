@@ -2,8 +2,7 @@ local k = import "../Kubernetes.json";
 
 local caddy(configMap) = k.Deployment("caddy", {
         containers: [
-          k.Container({
-            name: 'caddy',
+          k.Container("caddy", {
             image: 'docker.io/caddy',
             env: [
               {

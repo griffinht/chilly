@@ -2,8 +2,7 @@ local k = import "../Kubernetes.json";
 
 k.Deployment("iperf", {
   containers: [
-    k.Container({
-      "name": "iperf",
+    k.Container("iperf", {
       "image": "docker.io/griffinhtdocker/iperf",
       "ports": [
         {

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#echo todo fix pod affinity
+#exit 1
+
 set -exo pipefail
 
 # todo improve concurrency somehow?

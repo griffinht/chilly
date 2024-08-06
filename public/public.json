@@ -1,8 +1,7 @@
+local k = import "Kubernetes.json";
+
 //https://devops.stackexchange.com/questions/18440/what-is-a-single-kubectl-list-object-as-mentioned-in-jsonnet-documentation
-local a = {
-  apiVersion: "v1",
-  kind: "List",
-  items: [
+local a = k.List([
     import "NetworkPolicy.json",
     //nope! this one is cluster scoped!
     import "ConfigMap.json",
@@ -12,13 +11,9 @@ local a = {
   + (import "caddy/caddy.json")
   + (import "apps/apps.json")
   + (import "secrets/secrets.json"),
-};
+);
 
-local b = {
-  apiVersion: "v1",
-  kind: "List",
-  items: [import "NetworkPolicy.json"]
-};
+local b = k.List([import "NetworkPolicy.json"]);
 
 a
 #b

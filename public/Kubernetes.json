@@ -1,3 +1,8 @@
+local Resource(name, spec, apiVersion="v1") = {
+  kind: name,
+  apiVersion: apiVersion
+} + spec;
+
 local Deployment(name, spec) = {
   "apiVersion": "apps/v1",
   "kind": "Deployment",
@@ -34,7 +39,8 @@ local Deployment(name, spec) = {
 
 {
   Deployment: Deployment,
-  Container: (function(container) container + {
+  Container: (function(name, container) container + {
+    name: name,
     resources: {
       requests: {
         memory: "10Mi",
@@ -50,9 +56,7 @@ local Deployment(name, spec) = {
   Service: (function(name) {
     "apiVersion": "v1",
     "kind": "Service",
-    "metadata": {
-      "name": name,
-    },
+    metadata: { name: name },
     "spec": {
       "selector": {
         "app.kubernetes.io/name": name,
@@ -65,12 +69,8 @@ local Deployment(name, spec) = {
       ]
     }
   }),
-  NetworkPolicy: (function(name) {
-    "apiVersion": "networking.k8s.io/v1",
-    "kind": "NetworkPolicy",
-    "metadata": {
-      "name": name,
-    },
+  NetworkPolicy: (function(name) Resource("NetworkPolicy", {
+    metadata: { name: name },
     "spec": {
       "podSelector": {
         "matchLabels": {
@@ -94,16 +94,21 @@ local Deployment(name, spec) = {
         }
       ]
     }
-  }),
-  Secret: (function(name, data) {
-    kind: "Secret",
-    apiVersion: "v1",
-    metadata: {
-        name: name,
-        //"creationTimestamp": null
-    },
-    // make sure this is b64 encoded!
+  }, apiVersion="networking.k8s.io/v1")),
+  Secret: (function(name, data) Resource("Secret", {
+    metadata: { name: name },
     data: { [key]: std.base64(data[key]) for key in std.objectFields(data) },
     immutable: true
-  }),
+  })),
+  List: (function(list) Resource("List", {
+    items: list
+  })),
+  Namespace: (function(name) Resource("Namespace", {
+      metadata: {
+        name: name,
+        labels: {
+          "name": name
+        }
+      }
+  })),
 }

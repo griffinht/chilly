@@ -10,8 +10,7 @@ k.Deployment("miniflux", {
     }
   ],
   containers: [
-    k.Container({
-      name: "cloud-sql-proxy",
+    k.Container("cloud-sql-proxy", {
       image: "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.4",
       args: [
         "chilly-429823:us-east1:chilly",
@@ -28,8 +27,7 @@ k.Deployment("miniflux", {
         }
       ]
     }),
-    k.Container({
-      name: "miniflux",
+    k.Container("miniflux", {
       image: "docker.io/miniflux/miniflux:latest",
       ports: [
         {
