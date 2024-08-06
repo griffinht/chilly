@@ -3,6 +3,15 @@ local Resource(name, spec, apiVersion="v1") = {
   apiVersion: apiVersion
 } + spec;
 
+local sleepD = (function(deploymentSpec) deploymentSpec + {
+  terminationGracePeriodSeconds: 0
+});
+
+local sleep = (function(container) container + {
+  command: [ "sleep" ],
+  args: [ "infinity" ],
+});
+# todo add spec strategy recreate
 local Deployment(name, spec) = {
   "apiVersion": "apps/v1",
   "kind": "Deployment",
@@ -107,8 +116,34 @@ local Deployment(name, spec) = {
       metadata: {
         name: name,
         labels: {
-          "name": name
+          name: name
         }
       }
+  })),
+  ConfigMap: (function(name, data) Resource('ConfigMap', {
+    data: data,
+    immutable: true,
+    metadata: {
+      name: name
+    }
+  })),
+  PersistentVolumeClaim: (function(name, capacity) Resource('PersistentVolumeClaim', {
+    metadata: {
+      name: name,
+    },
+    spec: {
+      storageClassName: 'standard-rwo',
+      # only used if binding to an existing volume
+      #volumeName: name,
+      # todo this is a bug waiting to happen
+      # if a pod is on the same node? find
+      # if its on a diff node? wont be scheduled...
+      accessModes: [ 'ReadWriteOnce' ],
+      resources: {
+        requests: {
+          storage: capacity,
+        }
+      },
+    },
   })),
 }
