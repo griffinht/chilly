@@ -6,7 +6,7 @@ local a = k.List([
     //nope! this one is cluster scoped!
     import "ConfigMap.json",
     //import "Namespace.json",
-  ] + (import "iperf/iperf.json")
+  ] //+ (import "iperf/iperf.json")
   + (import "miniflux/miniflux.json")
   + (import "caddy/caddy.json")
   + (import "apps/apps.json")
