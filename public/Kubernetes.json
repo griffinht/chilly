@@ -57,8 +57,8 @@ local Deployment(name, spec) = {
       },
       /*
       limits: {
-        memory: "20Mi",
-        cpu: "20m",
+        memory: "30Mi",
+        cpu: "30m",
       }*/
     }
   }),
@@ -146,4 +146,17 @@ local Deployment(name, spec) = {
       },
     },
   })),
+  PodDisruptionBudget: (function(name) Resource('PodDisruptionBudget', {
+    metadata: {
+      name: name
+    },
+    spec: {
+      minAvailable: 1,
+      selector: {
+        matchLabels: {
+          'app.kubernetes.io/name': name
+        }
+      }
+    }
+  }, apiVersion='policy/v1')),
 }

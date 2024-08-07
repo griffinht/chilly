@@ -66,12 +66,19 @@ local apps = [
 ];
 
 [
-  k.Deployment(app.name, { containers: [ k.Container(app.name, app) ] })
+  k.Deployment(app.name, { containers: [ k.Container(app.name, app) ] }) + {
+    spec+: {
+      replicas: 2
+    }
+  }
   for app in apps
 ] + [
   k.NetworkPolicy(app.name)
   for app in apps
 ] + [
   k.Service(app.name)
+  for app in apps
+] + [
+  k.PodDisruptionBudget(app.name)
   for app in apps
 ]
