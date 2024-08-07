@@ -10,3 +10,4 @@ set -exo pipefail
 
 jsonnet public.json | KUBECTL_APPLYSET=true kubectl apply --warnings-as-errors -f - --prune --applyset=test --namespace=default
 #jsonnet public.json | kubectl delete --warnings-as-errors -f - --namespace=default
+./caddy/rollback.sh

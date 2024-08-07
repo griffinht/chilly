@@ -84,4 +84,4 @@ local caddy(configMap) = k.Deployment("caddy", {
   }
 };
 
-caddy(std.strReplace(importstr "version", "\n", ""))
+caddy('caddy-v' + std.strReplace(importstr "version", "\n", ""))

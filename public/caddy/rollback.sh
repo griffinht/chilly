@@ -5,9 +5,6 @@ set -xe
 # kubectl rollout history deployment/caddy 
 # kubectl rollout undo deployment/caddy --to-revision=3
 
-cleanup() {
+if ! kubectl rollout status deployment/caddy --timeout=20s; then
     kubectl rollout undo deployment/caddy
-}
-trap cleanup EXIT
-
-kubectl rollout status deployment/caddy --timeout=5s
+fi
