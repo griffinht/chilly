@@ -1,8 +1,0 @@
-services:
-  tailscale:
-    image: tailscale/tailscale
-    network_mode: host
-    hostname: devbox
-    environment:
-      - TS_USERSPACE=true
-      - TS_AUTHKEY=tskey-auth-k5QyvTZ4uK11CNTRL-efr9b1GGBG1u16jtyefbF1eRaBnqmogwY

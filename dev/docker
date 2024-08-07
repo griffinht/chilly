@@ -1,4 +1,0 @@
-# /etc/default/docker
-# syustemctl daemon-reload\
-# systemctl docker restart
-DOCKER_OPTS='--host=tcp://127.0.0.1'
