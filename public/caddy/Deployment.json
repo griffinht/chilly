@@ -76,6 +76,12 @@ local caddy(configMap) = k.Deployment("caddy", {
             },
           },
         ],
-});
+}) + {
+  spec+: {
+    strategy: {
+      type: 'Recreate'
+    }
+  }
+};
 
-caddy("caddy-v26")
+caddy(std.strReplace(importstr "version", "\n", ""))

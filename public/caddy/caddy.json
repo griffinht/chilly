@@ -1,4 +1,6 @@
 [
+  # todo add pod disruption budget of 1 and replica 1 idk
+  # todo kubernetes best practices for stateful, statless, and etc
   import "Deployment.json",
   import "NetworkPolicy.json",
   import "Service.json",

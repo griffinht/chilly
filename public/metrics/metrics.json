@@ -7,31 +7,7 @@ local name = 'grafana';
 
 local deployment = k.Deployment(name, {
   containers: [
-    /*
-    k.Container('prometheus', {
-      image: 'docker.io/prom/prometheus',
-      ports: [
-        {
-          containerPort: 9090,
-          name: 'http',
-        },
-      ],
-      args: [
-        '--config.file=/config/prometheus.json',
-      ],
-      volumeMounts: [
-        {
-          mountPath: '/prometheus',
-          name: 'prometheus',
-        },
-        {
-          # todo it should be readonly?
-          mountPath: '/config',
-          name: 'prometheus-config',
-        },
-      ],
-    }),*/
-    k.Container(name, {
+        k.Container(name, {
       image: 'docker.io/grafana/grafana-oss',
       ports: [
         {
@@ -60,16 +36,12 @@ local deployment = k.Deployment(name, {
           mountPath: '/var/lib/grafana',
           name: 'grafana',
         },
-        /*
-        {
-          # todo make all configmap mounts read only
-          mountPath: '/etc/grafana',
-          name: 'grafana-config',
-          readOnly: true,
-        },*/
       ],
     }),
   ],
+  # grafana runs as non root
+  # we need to mount grafana's volumes owned by the grafana user (uid 472)
+  # by default they are owned by root
   securityContext: {
     fsGroup: 472,
   },
@@ -122,25 +94,76 @@ local deployment = k.Deployment(name, {
 };
 
 
+local deployment_prom = k.Deployment('prometheus', {
+  containers: [
+    k.Container('prometheus', {
+      image: 'docker.io/prom/prometheus',
+      ports: [
+        {
+          containerPort: 9090,
+          name: 'http',
+        },
+      ],
+      args: [
+        '--config.file=/config/prometheus.json',
+      ],
+      volumeMounts: [
+        {
+          mountPath: '/prometheus',
+          name: 'prometheus',
+        },
+        {
+          # todo it should be readonly?
+          mountPath: '/config',
+          name: 'prometheus-config',
+        },
+      ],
+    }),
+  ],
+  securityContext: {
+    #runAsUser: 0,
+    #runAsGroup: 0,
+    fsGroup: 65534,
+  },
+  volumes: [
+    {
+      name: 'prometheus',
+      persistentVolumeClaim: {
+        claimName: 'prometheus',
+      },
+    },
+    {
+      name: 'prometheus-config',
+      configMap: {
+        name: prometheus_config,
+        items: [
+          {
+            key: 'prometheus.json',
+            path: 'prometheus.json',
+          },
+        ],
+      },
+    },
+  ],
+}) + {
+  spec+: {
+    strategy: {
+      type: 'Recreate'
+    }
+  }
+};
+
 k.List([
   deployment,
-  /*
+  k.Service(name),
+  k.NetworkPolicy(name),
+  k.PersistentVolumeClaim('grafana', '1Gi'),
+
+  deployment_prom,
   k.ConfigMap(prometheus_config, {
     'prometheus.json': importstr 'prometheus.json'
   }),
-  k.ConfigMap(grafana_config, {
-    'grafana.ini': importstr 'grafana.ini'
-  }),*/
-  //k.PersistentVolumeClaim('prometheus', '1Gi'),
-  k.PersistentVolumeClaim('grafana', '1Gi'),
-  /*k.PersistentVolumeClaim('grafana', '1Gi') + {
-    # bug :( https://searxng.chilly.griffinht.com/search readwriteoncepod securitycontezt fsgroup not working
-    spec+: {
-      accessModes: [
-        "ReadWriteOncePod"
-      ]
-    }
-  },*/
-  k.Service(name),
-  k.NetworkPolicy(name),
+  k.PersistentVolumeClaim('prometheus', '1Gi'),
+  k.Service('prometheus'),
+  k.NetworkPolicy('prometheus'),
 ])

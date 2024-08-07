@@ -102,6 +102,21 @@ https://miniflux.{$DOMAIN} {
     }
 }
 
+
+# https://caddyserver.com/docs/caddyfile/directives/forward_auth
+# todo make auth optional
+# https://github.com/oauth2-proxy/oauth2-proxy/issues/713
+# https://github.com/oauth2-proxy/oauth2-proxy/issues/1705
+#https://httpbin-public.{$DOMAIN} {
+# security: make sure grafana doesn't allow user/pass sign in when x-forwarded-user is not present
+https://grafana.{$DOMAIN} {
+    import all
+    import auth
+    reverse_proxy {
+        to grafana
+    }
+}
+
 https://httpbin.{$DOMAIN} {
     import all
     import auth

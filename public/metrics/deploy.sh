@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-set -exo pipefail
-
-# todo improve concurrency somehow?
-#https://stackoverflow.com/questions/28357997/running-programs-in-parallel-using-xargs
-
-jsonnet deploy.json | KUBECTL_APPLYSET=true kubectl apply --warnings-as-errors -f - --prune --applyset=prometheus --namespace=default
-#jsonnet public.json | kubectl delete --warnings-as-errors -f - --namespace=default
