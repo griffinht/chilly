@@ -1,0 +1,10 @@
+{
+  site: {
+    dir: "site",
+    cmd: "./deploy.sh"
+  },
+  k8s: {
+    dir: "public",
+    cmd: "./test.sh"
+  }
+}

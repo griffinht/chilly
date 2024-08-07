@@ -1,65 +1,19 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # todo https://www.google.com/search?client=firefox-b-1-d&q=git+embed+ci+runs+in+git+commit
 set -e
 
+message="$(git show --format=%s -s)"
+get_tags() {
+    git tag --contains "$(git rev-parse HEAD)" | head -c -1 | jq -R -s 'split("\n")'
+}
+tags="$(get_tags)"
+
+
 fail="❌"
 pass="✅"
 
-old() {
-    echo "$@"
-    message="$(git show --format=%s -s)"
-    case "$message" in
-        *"$fail")
-            echo skipping tests
-            ;;
-        *"$pass")
-            echo skipping tests
-            ;;
-        *)
-            ;;
-    esac
-    exit 1
-}
 
+git commit --allow-empty --amend --only -m "$message $status"
 
-tmp="$(mktemp -d)"
-git clone . "$tmp"
-
-mytest() {
-    (
-    set -xe
-    cd public
-    ls
-    cat Makefile
-    ./test.sh
-)
-}
-
-old="$PWD"
-cd "$tmp"
-if mytest; then
-    status="$pass"
-else
-    status="$fail"
-fi
-cd "$old"
-
-git commit --allow-empty --amend --only -m "$(git show --format=%s -s) $status"
-
-if [ "$status" = "$fail" ]; then
-    exit 1
-fi
-
-exit 0
-#
-# An example hook script to verify what is about to be committed.
-# Called by "git commit" with no arguments.  The hook should
-# exit with non-zero status after issuing an appropriate message if
-# it wants to stop the commit.
-#
-# To enable this hook, rename this file to "pre-commit".
-
-# Redirect output to stderr.
-#exec 1>&2
-
+./integrate.sh
