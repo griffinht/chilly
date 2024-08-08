@@ -1,4 +1,4 @@
-local secrets = import 'secrets.json';
+local secrets = import '/home/griffin/secrets/talos.json';
 
 {
   version: 'v1alpha1',  // Indicates the schema used to decode the contents.
@@ -231,6 +231,8 @@ local secrets = import 'secrets.json';
       // - https://www.example.com/manifest2.yaml
       // A list of inline Kubernetes manifests.
     ],
+    // Allows running workload on control-plane nodes.
+    allowSchedulingOnControlPlanes: true
   },
   // - name: namespace-ci # Name of the manifest.
   // contents: |- # Manifest contents as a string.
@@ -258,6 +260,4 @@ local secrets = import 'secrets.json';
   // Settings for admin kubeconfig generation.
   // adminKubeconfig:
   // certLifetime: 1h0m0s # Admin kubeconfig certificate lifetime (default is 1 year).
-  // Allows running workload on control-plane nodes.
-  // allowSchedulingOnControlPlanes: true
 }

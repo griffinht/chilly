@@ -5,4 +5,23 @@
 jsonnet controlplane.json \
     | talosctl apply-config \
     --file /dev/stdin \
-    --mode=try
+    --dry-run
+
+try() {
+    jsonnet controlplane.json \
+        | talosctl apply-config \
+        --file /dev/stdin \
+        --mode=try
+}
+
+apply() {
+    jsonnet controlplane.json \
+        | talosctl apply-config \
+        --file /dev/stdin \
+        --mode=no-reboot
+}
+
+echo continue with "$@" ?
+read -r test
+
+"$@"
