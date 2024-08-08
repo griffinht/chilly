@@ -6,7 +6,7 @@
       static_configs: [
         {
           targets: [
-            'admin.cool.griffinht.com',
+            'caddy',
           ],
         },
       ],
@@ -16,17 +16,7 @@
       static_configs: [
         {
           targets: [
-            'miniflux.cool.griffinht.com',
-          ],
-        },
-      ],
-    },
-    {
-      job_name: 'traefik',
-      static_configs: [
-        {
-          targets: [
-            'traefik.cool.griffinht.com',
+            'miniflux',
           ],
         },
       ],
