@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # https://www.talos.dev/v1.7/talos-guides/configuration/editing-machine-configuration/
 
 jsonnet controlplane.json \

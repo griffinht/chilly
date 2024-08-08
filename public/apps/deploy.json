@@ -1,0 +1,46 @@
+local k = import "../Kubernetes.json";
+/*
+local applyset = (function(resource) resource + {
+  metadata+: {
+    labels+: {
+      'applyset.kubernetes.io/part-of': 'applyset-xxx'
+    }
+  }
+});*/
+
+local test = (function(resource)
+  if resource.kind == 'Deployment' then
+    resource + {
+      spec+: {
+        template+: {
+          spec+: {
+            containers: std.map((function(container) container + {
+              securityContext: {
+                allowPrivilegeEscalation: false,
+                capabilities: {
+                  drop: [
+                    //'ALL',
+                  ]
+                }
+              }
+            }), resource.spec.template.spec.containers),
+            securityContext: {
+              //runAsNonRoot: true,
+              seccompProfile: {
+                type: 'RuntimeDefault' //todo what is this Localhost business?
+              }
+            }
+          }
+        }
+      }
+    }
+  else
+    resource);
+
+local a = k.List([
+] + std.map((function(resource) test(resource)), (import "apps.json"))
+);
+
+
+a
+#b

@@ -27,7 +27,7 @@
         },
         "spec": spec + {
           nodeSelector: {
-            "cloud.google.com/gke-spot": "true",
+            //"cloud.google.com/gke-spot": "true",
             //"cloud.google.com/compute-class": "Performance",
             //"cloud.google.com/machine-family": "c3"
           },
